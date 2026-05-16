@@ -50,8 +50,8 @@ export default function LoginPage() {
         const profileData = await profileRes.json()
         fullName = profileData?.data?.full_name || fullName
       } catch(e) {}
-      document.cookie = `sco_token=${token}; path=/; max-age=2592000; SameSite=Lax`
-      document.cookie = `sco_user=${encodeURIComponent(JSON.stringify({ id: user.id, email: user.email, name: fullName }))}; path=/; max-age=2592000; SameSite=Lax`
+      document.cookie = `sp_token=${token}; path=/; max-age=2592000; SameSite=Lax`
+      document.cookie = `sp_user=${encodeURIComponent(JSON.stringify({ id: user.id, email: user.email, name: fullName }))}; path=/; max-age=2592000; SameSite=Lax`
       router.push('/dashboard')
     } catch(err) {
       setError('Authentication failed: ' + err.message)
