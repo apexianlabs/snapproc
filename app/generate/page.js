@@ -35,7 +35,8 @@ export default function GeneratePage() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Failed')
       alert('Got result: ' + JSON.stringify(Object.keys(data.result || {})))
-      setResult(data.result)
+      alert('data keys: ' + JSON.stringify(Object.keys(data)) + ' result type: ' + typeof data.result + ' result null: ' + (data.result === null))
+      setResult(data.result || data)
     } catch(e) {
       setError(e.message)
     }
