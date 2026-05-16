@@ -20,29 +20,27 @@ export default function GeneratePage() {
     } catch(e) {}
   }, [])
 
-  const downloadTxt = () => {
+  const downloadDocx = async () => {
     if (!result) return
-    let text = `STANDARD OPERATING PROCEDURE\n${'='.repeat(50)}\n\n`
-    text += `Process: ${result.sop_title || form.process_name}\nDepartment: ${form.department}\nDate: ${new Date().toLocaleDateString()}\n\n`
-    if (result.purpose) text += `PURPOSE\n${result.purpose}\n\n`
-    if (result.scope) text += `SCOPE\n${result.scope}\n\n`
-    if (result.steps?.length) {
-      text += `PROCEDURE\n`
-      result.steps.forEach((step, i) => {
-        text += `\nStep ${step.number || i+1}: ${step.action || step.title || ''}\n`
-        if (step.tool) text += `  Tool: ${step.tool}\n`
-        if (step.note) text += `  Note: ${step.note}\n`
-        if (step.conditional && step.conditional !== 'null') text += `  If: ${step.conditional}\n`
+    try {
+      const token = document.cookie.match(/sp_token=([^;]+)/)?.[1] || ''
+      const res = await fetch('/api/download-docx', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ result, process_name: result.sop_title || form.process_name, department: form.department })
       })
-    }
-    if (result.expected_outcome) text += `\nEXPECTED OUTCOME\n${result.expected_outcome}\n`
-    const blob = new Blob([text], { type: 'text/plain' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${(result.sop_title || form.process_name).replace(/\s+/g,'-').toLowerCase()}-sop.txt`
-    a.click()
-    URL.revokeObjectURL(url)
+      const data = await res.json()
+      if (!data.docx) return alert('Download failed')
+      const blob = new Blob([Uint8Array.from(atob(data.docx), c => c.charCodeAt(0))], {
+        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `${(result.sop_title || form.process_name).replace(/\s+/g,'-').toLowerCase()}-sop.docx`
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch(e) { alert('Download failed: ' + e.message) }
   }
 
   const downloadPdf = () => {
@@ -144,9 +142,9 @@ export default function GeneratePage() {
           )}
 
           <div style={{display:'flex',gap:12}}>
-            <button onClick={downloadTxt}
+            <button onClick={downloadDocx}
               style={{flex:1,minWidth:120,padding:'11px',borderRadius:10,border:'1px solid #bae6fd',background:'#f0f9ff',fontSize:13,fontWeight:600,color:'#0891b2',cursor:'pointer',fontFamily:'Inter,sans-serif'}}>
-              📄 Download TXT
+              📄 Download DOCX
             </button>
             <button onClick={downloadPdf}
               style={{flex:1,minWidth:120,padding:'11px',borderRadius:10,border:'1px solid #fecaca',background:'#fef2f2',fontSize:13,fontWeight:600,color:'#dc2626',cursor:'pointer',fontFamily:'Inter,sans-serif'}}>
@@ -182,7 +180,6 @@ export default function GeneratePage() {
         <h1 style={{fontSize:26,fontWeight:800,color:'#0f172a',marginBottom:6}}>Generate an SOP</h1>
         <p style={{fontSize:14,color:'#64748b',marginBottom:28}}>Paste your rough process steps and get a professional SOP in seconds.</p>
         {error && <div style={{background:'#fef2f2',border:'1px solid #fecaca',borderRadius:10,padding:'12px 16px',fontSize:13,color:'#dc2626',marginBottom:20}}>{error}</div>}
-        <pre id="debug-out" style={{background:'#000',color:'#0f0',padding:12,borderRadius:8,fontSize:11,marginBottom:16,minHeight:20}}></pre>
         <div style={{background:'#fff',border:'1px solid #e2e8f0',borderRadius:14,padding:28}}>
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:18}}>
             <div>
