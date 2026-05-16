@@ -19,6 +19,7 @@ export default function GeneratePage() {
   }, [])
 
   const handleSubmit = async () => {
+    alert('handleSubmit called! name=' + form.process_name)
     if (!form.process_name.trim()) return setError('Please enter the process name.')
     if (!form.raw_steps.trim()) return setError('Please enter the process steps.')
     setLoading(true)
