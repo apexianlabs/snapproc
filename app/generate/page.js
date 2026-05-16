@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 const DEPARTMENTS = ['Operations','HR','Finance','IT','Marketing','Sales','Customer Support','Legal','Product','Other']
 
-function SnaprocInner() {
+function SnaprocInnerV2() {
   const [user, setUser]         = useState(null)
   const [loading, setLoading]   = useState(false)
   const [error, setError]       = useState('')
@@ -214,7 +214,7 @@ function SnaprocInner() {
 export default function GeneratePage() {
   return (
     <Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',color:'#94a3b8'}}>Loading...</div>}>
-      <SnaprocInner />
+      <SnaprocInnerV2 />
     </Suspense>
   )
 }
