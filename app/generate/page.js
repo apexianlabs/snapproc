@@ -35,8 +35,7 @@ export default function GeneratePage() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Failed')
       alert('Got result: ' + JSON.stringify(Object.keys(data.result || {})))
-      alert('data keys: ' + JSON.stringify(Object.keys(data)) + ' result type: ' + typeof data.result + ' result null: ' + (data.result === null))
-      setResult(data.result || data)
+      setResult(data.result)
     } catch(e) {
       setError(e.message)
     }
@@ -76,8 +75,6 @@ export default function GeneratePage() {
             </div>
           )}
 
-          <pre style={{background:'#000',color:'#0f0',padding:12,borderRadius:8,fontSize:10,marginBottom:12,overflow:'auto',maxHeight:200}}>{`STEPS: ${steps.length} | FIRST: ${JSON.stringify(steps[0])}`}</pre>
-
           {steps.length > 0 && (
             <div style={{background:'#fff',border:'1px solid #e2e8f0',borderRadius:12,padding:20,marginBottom:12}}>
               <p style={{fontSize:11,fontWeight:700,color:'#475569',textTransform:'uppercase',marginBottom:16}}>📝 Procedure Steps</p>
@@ -98,7 +95,7 @@ export default function GeneratePage() {
                         <p style={{fontSize:12,color:'#0369a1'}}>💡 {step.note}</p>
                       </div>
                     )}
-                    {step.conditional && (
+                    {step.conditional && step.conditional !== 'null' && step.conditional !== null && (
                       <div style={{background:'#fffbeb',borderRadius:6,padding:'6px 10px',marginTop:4}}>
                         <p style={{fontSize:12,color:'#d97706'}}>⚡ {step.conditional}</p>
                       </div>
