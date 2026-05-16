@@ -55,7 +55,7 @@ export default function HomePage() {
       <footer style={{padding:'24px 20px',borderTop:'1px solid #e2e8f0',display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:12}}>
         <span style={{fontWeight:700,fontSize:13}}>Snapproc</span>
         <p style={{fontSize:12,color:'#94a3b8'}}>© {new Date().getFullYear()} Snapproc. Built on Claude AI.</p>
-        <div style={{display:'flex',gap:16}}>{['Privacy','Terms','Support'].map(l => <a key={l} href="#" style={{fontSize:12,color:'#64748b',textDecoration:'none'}}>{l}</a>)}</div>
+        <div style={{display:'flex',gap:16}}>{[['Privacy','/privacy'],['Terms','/terms'],['Support','/support']].map(([l,h]) => <a key={l} href={h} style={{fontSize:12,color:'#64748b',textDecoration:'none'}}>{l}</a>)}</div>
       </footer>
     </div>
   )

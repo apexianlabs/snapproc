@@ -4,6 +4,8 @@ import Link from 'next/link'
 
 const DEPARTMENTS = ['Operations','HR','Finance','IT','Marketing','Sales','Customer Support','Legal','Product','Other']
 
+const printStyles = `@media print { nav, .no-print { display: none !important; } body { background: white; } }`
+
 export default function GeneratePage() {
   const [user, setUser]       = useState(null)
   const [loading, setLoading] = useState(false)
@@ -18,8 +20,37 @@ export default function GeneratePage() {
     } catch(e) {}
   }, [])
 
+  const downloadTxt = () => {
+    if (!result) return
+    let text = `STANDARD OPERATING PROCEDURE\n${'='.repeat(50)}\n\n`
+    text += `Process: ${result.sop_title || form.process_name}\nDepartment: ${form.department}\nDate: ${new Date().toLocaleDateString()}\n\n`
+    if (result.purpose) text += `PURPOSE\n${result.purpose}\n\n`
+    if (result.scope) text += `SCOPE\n${result.scope}\n\n`
+    if (result.steps?.length) {
+      text += `PROCEDURE\n`
+      result.steps.forEach((step, i) => {
+        text += `\nStep ${step.number || i+1}: ${step.action || step.title || ''}\n`
+        if (step.tool) text += `  Tool: ${step.tool}\n`
+        if (step.note) text += `  Note: ${step.note}\n`
+        if (step.conditional && step.conditional !== 'null') text += `  If: ${step.conditional}\n`
+      })
+    }
+    if (result.expected_outcome) text += `\nEXPECTED OUTCOME\n${result.expected_outcome}\n`
+    const blob = new Blob([text], { type: 'text/plain' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${(result.sop_title || form.process_name).replace(/\s+/g,'-').toLowerCase()}-sop.txt`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const downloadPdf = () => {
+    if (!result) return
+    window.print()
+  }
+
   const handleSubmit = async () => {
-    alert('handleSubmit called! name=' + form.process_name)
     if (!form.process_name.trim()) return setError('Please enter the process name.')
     if (!form.raw_steps.trim()) return setError('Please enter the process steps.')
     setLoading(true)
@@ -34,7 +65,7 @@ export default function GeneratePage() {
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Failed')
-      alert('Got result: ' + JSON.stringify(Object.keys(data.result || {})))
+))
       setResult(data.result)
     } catch(e) {
       setError(e.message)
@@ -114,12 +145,20 @@ export default function GeneratePage() {
           )}
 
           <div style={{display:'flex',gap:12}}>
+            <button onClick={downloadTxt}
+              style={{flex:1,minWidth:120,padding:'11px',borderRadius:10,border:'1px solid #bae6fd',background:'#f0f9ff',fontSize:13,fontWeight:600,color:'#0891b2',cursor:'pointer',fontFamily:'Inter,sans-serif'}}>
+              📄 Download TXT
+            </button>
+            <button onClick={downloadPdf}
+              style={{flex:1,minWidth:120,padding:'11px',borderRadius:10,border:'1px solid #fecaca',background:'#fef2f2',fontSize:13,fontWeight:600,color:'#dc2626',cursor:'pointer',fontFamily:'Inter,sans-serif'}}>
+              📕 Print / PDF
+            </button>
             <button onClick={() => setResult(null)}
-              style={{flex:1,padding:'11px',borderRadius:10,border:'1px solid #e2e8f0',background:'#fff',fontSize:13,fontWeight:600,color:'#475569',cursor:'pointer',fontFamily:'Inter,sans-serif'}}>
-              Generate another
+              style={{flex:1,minWidth:120,padding:'11px',borderRadius:10,border:'1px solid #e2e8f0',background:'#fff',fontSize:13,fontWeight:600,color:'#475569',cursor:'pointer',fontFamily:'Inter,sans-serif'}}>
+              New SOP
             </button>
             {!user && (
-              <Link href="/signup" style={{flex:2,padding:'11px',borderRadius:10,border:'none',background:'#0891b2',color:'#fff',fontSize:13,fontWeight:700,textDecoration:'none',textAlign:'center',display:'flex',alignItems:'center',justifyContent:'center'}}>
+              <Link href="/login" style={{flex:2,minWidth:140,padding:'11px',borderRadius:10,border:'none',background:'#0891b2',color:'#fff',fontSize:13,fontWeight:700,textDecoration:'none',textAlign:'center',display:'flex',alignItems:'center',justifyContent:'center'}}>
                 Save to library →
               </Link>
             )}
