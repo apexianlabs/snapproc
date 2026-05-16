@@ -33,9 +33,8 @@ export default function GeneratePage() {
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Failed')
+      alert('Got result: ' + JSON.stringify(Object.keys(data.result || {})))
       setResult(data.result)
-      // DEBUG - remove later
-      document.getElementById('debug-out').textContent = JSON.stringify(data.result?.steps?.slice(0,1), null, 2)
     } catch(e) {
       setError(e.message)
     }
