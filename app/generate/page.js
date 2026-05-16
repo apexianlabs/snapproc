@@ -34,6 +34,8 @@ export default function GeneratePage() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Failed')
       setResult(data.result)
+      // DEBUG - remove later
+      document.getElementById('debug-out').textContent = JSON.stringify(data.result?.steps?.slice(0,1), null, 2)
     } catch(e) {
       setError(e.message)
     }
@@ -142,6 +144,7 @@ export default function GeneratePage() {
         <h1 style={{fontSize:26,fontWeight:800,color:'#0f172a',marginBottom:6}}>Generate an SOP</h1>
         <p style={{fontSize:14,color:'#64748b',marginBottom:28}}>Paste your rough process steps and get a professional SOP in seconds.</p>
         {error && <div style={{background:'#fef2f2',border:'1px solid #fecaca',borderRadius:10,padding:'12px 16px',fontSize:13,color:'#dc2626',marginBottom:20}}>{error}</div>}
+        <pre id="debug-out" style={{background:'#000',color:'#0f0',padding:12,borderRadius:8,fontSize:11,marginBottom:16,minHeight:20}}></pre>
         <div style={{background:'#fff',border:'1px solid #e2e8f0',borderRadius:14,padding:28}}>
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:18}}>
             <div>
