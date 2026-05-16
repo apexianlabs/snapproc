@@ -75,6 +75,12 @@ export default function GeneratePage() {
             </div>
           )}
 
+          <pre style={{background:'#000',color:'#0f0',padding:12,borderRadius:8,fontSize:10,marginBottom:12,overflow:'auto',maxHeight:200}}>
+            STEPS COUNT: {steps.length}{'
+'}
+            FIRST STEP: {JSON.stringify(steps[0])}
+          </pre>
+
           {steps.length > 0 && (
             <div style={{background:'#fff',border:'1px solid #e2e8f0',borderRadius:12,padding:20,marginBottom:12}}>
               <p style={{fontSize:11,fontWeight:700,color:'#475569',textTransform:'uppercase',marginBottom:16}}>📝 Procedure Steps</p>
