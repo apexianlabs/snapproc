@@ -1,77 +1,107 @@
 import { NextResponse } from 'next/server'
+import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from 'docx'
 
 export async function POST(request) {
   try {
     const { result, process_name, department } = await request.json()
-    
-    // Build HTML content that converts well to DOCX-like format
-    // Using a simple RTF approach for maximum compatibility
     const steps = result.steps || []
-    
-    let rtf = '{\\rtf1\\ansi\\deff0'
-    rtf += '{\\fonttbl{\\f0 Arial;}}'
-    rtf += '{\\colortbl;\\red30\\green64\\blue175;\\red55\\green65\\blue81;\\red100\\green116\\blue139;}'
-    
+    const children = []
+
     // Title
-    rtf += '\\f0\\fs36\\b\\cf1 ' + escapeRtf(result.sop_title || process_name) + '\\b0\\fs22\\par'
-    rtf += '\\cf3\\fs18 ' + escapeRtf(department) + ' | ' + new Date().toLocaleDateString() + '\\cf0\\fs22\\par\\par'
-    
+    children.push(new Paragraph({
+      alignment: AlignmentType.CENTER,
+      spacing: { before: 0, after: 200 },
+      children: [new TextRun({ text: result.sop_title || process_name, font: 'Arial', size: 48, bold: true, color: '1e40af' })]
+    }))
+    children.push(new Paragraph({
+      alignment: AlignmentType.CENTER,
+      spacing: { before: 0, after: 400 },
+      children: [new TextRun({ text: `${department} · ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`, font: 'Arial', size: 20, color: '64748b' })]
+    }))
+
+    const heading = (text) => new Paragraph({
+      spacing: { before: 300, after: 100 },
+      children: [new TextRun({ text, font: 'Arial', size: 26, bold: true, color: '0891b2' })]
+    })
+
+    const body = (text) => new Paragraph({
+      spacing: { before: 60, after: 60 },
+      children: [new TextRun({ text: text || '', font: 'Arial', size: 22, color: '374151' })]
+    })
+
     // Purpose
     if (result.purpose) {
-      rtf += '\\b\\cf1\\fs24 PURPOSE\\b0\\cf0\\fs22\\par'
-      rtf += escapeRtf(result.purpose) + '\\par\\par'
+      children.push(heading('Purpose'))
+      children.push(body(result.purpose))
     }
-    
+
     // Scope
     if (result.scope) {
-      rtf += '\\b\\cf1\\fs24 SCOPE\\b0\\cf0\\fs22\\par'
-      rtf += escapeRtf(result.scope) + '\\par\\par'
+      children.push(heading('Scope'))
+      children.push(body(result.scope))
     }
-    
+
     // Steps
     if (steps.length > 0) {
-      rtf += '\\b\\cf1\\fs24 PROCEDURE\\b0\\cf0\\fs22\\par\\par'
+      children.push(heading('Procedure'))
       steps.forEach((step, i) => {
         const num = step.number || i + 1
         const action = step.action || step.title || ''
-        rtf += '\\b Step ' + num + ': ' + escapeRtf(action) + '\\b0\\par'
+        children.push(new Paragraph({
+          spacing: { before: 160, after: 40 },
+          children: [
+            new TextRun({ text: `Step ${num}: `, font: 'Arial', size: 22, bold: true, color: '0891b2' }),
+            new TextRun({ text: action, font: 'Arial', size: 22, bold: true, color: '0f172a' })
+          ]
+        }))
         if (step.tool && step.tool !== 'To be specified based on actual workflow tooling') {
-          rtf += '\\cf3 Tool: ' + escapeRtf(step.tool) + '\\cf0\\par'
+          children.push(new Paragraph({
+            spacing: { before: 30, after: 30 },
+            children: [new TextRun({ text: `🔧 Tool: ${step.tool}`, font: 'Arial', size: 20, color: '0891b2' })]
+          }))
         }
         if (step.note) {
-          rtf += '\\cf3 Note: ' + escapeRtf(step.note) + '\\cf0\\par'
+          children.push(new Paragraph({
+            spacing: { before: 30, after: 30 },
+            children: [new TextRun({ text: `💡 Note: ${step.note}`, font: 'Arial', size: 20, color: '0369a1' })]
+          }))
         }
         if (step.conditional && step.conditional !== 'null' && step.conditional !== null) {
-          rtf += '\\cf3 If: ' + escapeRtf(step.conditional) + '\\cf0\\par'
+          children.push(new Paragraph({
+            spacing: { before: 30, after: 30 },
+            children: [new TextRun({ text: `⚡ If: ${step.conditional}`, font: 'Arial', size: 20, color: 'd97706' })]
+          }))
         }
-        rtf += '\\par'
       })
     }
-    
+
     // Expected outcome
     if (result.expected_outcome) {
-      rtf += '\\b\\cf1\\fs24 EXPECTED OUTCOME\\b0\\cf0\\fs22\\par'
-      rtf += escapeRtf(result.expected_outcome) + '\\par\\par'
+      children.push(heading('Expected Outcome'))
+      children.push(body(result.expected_outcome))
     }
-    
+
     // Footer
-    rtf += '\\cf3\\fs18 Generated with Snapproc | snapproc.com\\cf0\\par'
-    rtf += '}'
-    
-    const buffer = Buffer.from(rtf, 'utf8')
-    const docx = buffer.toString('base64')
-    
+    children.push(new Paragraph({
+      alignment: AlignmentType.CENTER,
+      spacing: { before: 400 },
+      children: [new TextRun({ text: 'Generated with Snapproc · snapproc.com', font: 'Arial', size: 18, color: '94a3b8' })]
+    }))
+
+    const doc = new Document({
+      sections: [{
+        properties: {
+          page: { margin: { top: 1440, right: 1440, bottom: 1440, left: 1440 } }
+        },
+        children
+      }]
+    })
+
+    const buffer = await Packer.toBuffer(doc)
+    const docx = Buffer.from(buffer).toString('base64')
     return NextResponse.json({ docx })
   } catch(err) {
+    console.error('DOCX error:', err)
     return NextResponse.json({ error: err.message }, { status: 500 })
   }
-}
-
-function escapeRtf(str) {
-  if (!str) return ''
-  return str
-    .replace(/\\/g, '\\\\')
-    .replace(/\{/g, '\\{')
-    .replace(/\}/g, '\\}')
-    .replace(/\n/g, '\\par ')
 }
