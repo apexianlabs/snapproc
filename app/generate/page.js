@@ -114,16 +114,20 @@ function SnaprocInner() {
               <div style={{background:'#fff',border:'1px solid #e2e8f0',borderRadius:12,padding:20}}>
                 <p style={{fontSize:11,fontWeight:700,color:'#475569',textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:12}}>📝 Procedure Steps</p>
                 {(Array.isArray(result.steps) ? result.steps : Object.values(result.steps)).map((step, i) => (
-                  <div key={i} style={{display:'flex',gap:12,marginBottom:14,paddingBottom:14,borderBottom: i < (Array.isArray(result.steps) ? result.steps : Object.values(result.steps)).length-1 ? '1px solid #f1f5f9' : 'none'}}>
-                    <div style={{width:28,height:28,borderRadius:'50%',background:'#e0f2fe',display:'flex',alignItems:'center',justifyContent:'center',fontSize:12,fontWeight:700,color:'#0891b2',flexShrink:0,marginTop:2}}>{i+1}</div>
-                    <div>
+                  <div key={i} style={{display:'flex',gap:12,marginBottom:16,paddingBottom:16,borderBottom: i < (Array.isArray(result.steps) ? result.steps : Object.values(result.steps)).length-1 ? '1px solid #f1f5f9' : 'none'}}>
+                    <div style={{width:28,height:28,borderRadius:'50%',background:'#e0f2fe',display:'flex',alignItems:'center',justifyContent:'center',fontSize:12,fontWeight:700,color:'#0891b2',flexShrink:0,marginTop:2}}>
+                      {step.step_number || i+1}
+                    </div>
+                    <div style={{flex:1}}>
                       {typeof step === 'string' ? (
                         <p style={{fontSize:14,color:'#0f172a',lineHeight:1.6}}>{step}</p>
                       ) : (
                         <>
-                          {(step.title || step.step) && <p style={{fontSize:14,fontWeight:600,color:'#0f172a',marginBottom:4}}>{step.title || step.step}</p>}
-                          {step.description && <p style={{fontSize:13,color:'#374151',lineHeight:1.6}}>{step.description}</p>}
-                          {step.notes && <p style={{fontSize:12,color:'#64748b',marginTop:4,fontStyle:'italic'}}>{step.notes}</p>}
+                          {(step.title || step.step) && <p style={{fontSize:14,fontWeight:700,color:'#0f172a',marginBottom:6}}>{step.title || step.step}</p>}
+                          {step.description && <p style={{fontSize:13,color:'#374151',lineHeight:1.7,marginBottom:6}}>{step.description}</p>}
+                          {step.responsible_party && <p style={{fontSize:11,color:'#0891b2',fontWeight:600,marginBottom:4}}>👤 {step.responsible_party}</p>}
+                          {step.note && <div style={{background:'#f0f9ff',borderRadius:6,padding:'8px 10px',marginTop:6}}><p style={{fontSize:12,color:'#0369a1',lineHeight:1.5}}>💡 {step.note}</p></div>}
+                          {step.conditional && <div style={{background:'#fffbeb',borderRadius:6,padding:'8px 10px',marginTop:6}}><p style={{fontSize:12,color:'#d97706',lineHeight:1.5}}>⚡ {step.conditional}</p></div>}
                         </>
                       )}
                     </div>
