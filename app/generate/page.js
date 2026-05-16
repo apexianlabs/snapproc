@@ -65,7 +65,6 @@ export default function GeneratePage() {
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Failed')
-))
       setResult(data.result)
     } catch(e) {
       setError(e.message)
