@@ -114,6 +114,7 @@ function SnaprocInner() {
             {result.steps && (
               <div style={{background:'#fff',border:'1px solid #e2e8f0',borderRadius:12,padding:20}}>
                 <p style={{fontSize:11,fontWeight:700,color:'#475569',textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:12}}>📝 Procedure Steps</p>
+                <pre style={{fontSize:10,color:'#94a3b8',overflow:'auto',maxHeight:100,marginBottom:12}}>{JSON.stringify(result.steps[0], null, 2)}</pre>
                 {(Array.isArray(result.steps) ? result.steps : Object.values(result.steps)).map((step, i) => (
                   <div key={i} style={{display:'flex',gap:12,marginBottom:16,paddingBottom:16,borderBottom: i < (Array.isArray(result.steps) ? result.steps : Object.values(result.steps)).length-1 ? '1px solid #f1f5f9' : 'none'}}>
                     <div style={{width:28,height:28,borderRadius:'50%',background:'#e0f2fe',display:'flex',alignItems:'center',justifyContent:'center',fontSize:12,fontWeight:700,color:'#0891b2',flexShrink:0,marginTop:2}}>
