@@ -29,6 +29,7 @@ function SnaprocInner() {
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Generation failed')
+      console.log('RAW STEPS:', JSON.stringify(data.result?.steps?.[0]))
       setResult(data.result)
     } catch(e) { setError(e.message) }
     finally { setLoading(false) }
