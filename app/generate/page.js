@@ -154,9 +154,13 @@ export default function GeneratePage() {
               style={{flex:1,minWidth:120,padding:'11px',borderRadius:10,border:'1px solid #e2e8f0',background:'#fff',fontSize:13,fontWeight:600,color:'#475569',cursor:'pointer',fontFamily:'Inter,sans-serif'}}>
               New SOP
             </button>
-            {!user && (
+            {!user ? (
               <Link href="/login" style={{flex:2,minWidth:140,padding:'11px',borderRadius:10,border:'none',background:'#0891b2',color:'#fff',fontSize:13,fontWeight:700,textDecoration:'none',textAlign:'center',display:'flex',alignItems:'center',justifyContent:'center'}}>
                 Save to library →
+              </Link>
+            ) : (
+              <Link href="/dashboard" style={{flex:2,minWidth:140,padding:'11px',borderRadius:10,border:'none',background:'#0891b2',color:'#fff',fontSize:13,fontWeight:700,textDecoration:'none',textAlign:'center',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                View dashboard →
               </Link>
             )}
           </div>
