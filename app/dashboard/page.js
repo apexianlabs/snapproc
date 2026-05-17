@@ -188,7 +188,7 @@ export default function DashboardPage() {
                     <p style={{fontSize:11,color:'#94a3b8'}}>{new Date(item.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</p>
                   </div>
                 </div>
-                <Link href={`/items/${item.id}`} style={{color:'#0891b2',fontSize:12,fontWeight:600,textDecoration:'none',padding:'5px 12px',border:'1px solid #e2e8f0',borderRadius:6,flexShrink:0,marginLeft:12}}>
+                <Link href={`/sops/${item.id}`} style={{color:'#0891b2',fontSize:12,fontWeight:600,textDecoration:'none',padding:'5px 12px',border:'1px solid #e2e8f0',borderRadius:6,flexShrink:0,marginLeft:12}}>
                   View →
                 </Link>
               </div>
