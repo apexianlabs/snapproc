@@ -8,13 +8,13 @@ export default function PrivacyPage() {
       </nav>
       <div style={{maxWidth:680,margin:'0 auto',padding:'48px 24px'}}>
         <h1 style={{fontSize:28,fontWeight:800,color:'#0f172a',marginBottom:8}}>Privacy Policy</h1>
-        <p style={{fontSize:13,color:'#94a3b8',marginBottom:32}}>Last updated: May 2026</p>
+        <p style={{fontSize:13,color:'#94a3b8',marginBottom:32}}>Last updated: {new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'})}</p>
         {[
-          { title:'Information We Collect', body:'We collect information you provide when creating an account (name, email), and data generated through your use of the service (SOPs, process descriptions). We do not sell your data.' },
-          { title:'How We Use Your Information', body:'We use your information to provide and improve Snapproc, send important service updates, and process payments. Your process data is used solely to generate SOPs and is never shared with third parties.' },
-          { title:'Data Security', body:'We use industry-standard encryption and security measures to protect your data. Your content is stored securely on Supabase infrastructure.' },
+          { title:'Information We Collect', body:'We collect information you provide when creating an account (name, email), and data generated through your use of the service. We do not sell your data.' },
+          { title:'How We Use Your Information', body:'We use your information to provide and improve Snapproc, send important service updates, and process payments. Your data is used solely to provide the service and is never shared with third parties.' },
+          { title:'Data Security', body:'We use industry-standard encryption and security measures to protect your data. Your content is stored securely on our infrastructure.' },
           { title:'Data Retention', body:'We retain your data for as long as your account is active. You may request deletion of your account and data at any time by contacting support.' },
-          { title:'Contact Us', body:'For privacy-related questions, contact us at privacy@snapproc.com' },
+          { title:'Contact Us', body:'For privacy-related questions, contact us at privacy@snapproc.io' },
         ].map(s => (
           <div key={s.title} style={{marginBottom:28}}>
             <h2 style={{fontSize:16,fontWeight:700,color:'#0f172a',marginBottom:8}}>{s.title}</h2>

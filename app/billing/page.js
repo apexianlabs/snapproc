@@ -19,12 +19,12 @@ export default function BillingPage() {
   const [invoices, setInvoices]   = useState([])
 
   useEffect(() => {
-    const match = document.cookie.match(/sco_user=([^;]+)/)
+    const match = document.cookie.match(/sna_user=([^;]+)/)
     if (match) {
       try {
         const u = JSON.parse(decodeURIComponent(match[1]))
         setUser(u)
-        const token = document.cookie.match(/sco_token=([^;]+)/)?.[1]
+        const token = document.cookie.match(/sna_token=([^;]+)/)?.[1]
         if (token && u?.id) {
           fetch(`/api/subscription?user_id=${u.id}`, { headers: { 'Authorization': `Bearer ${token}` } })
             .then(r => r.json()).then(data => { if (data?.plan) setCurrentPlan(data.plan) })
@@ -39,7 +39,7 @@ export default function BillingPage() {
     if (planId === currentPlan || planId === 'free') return
     setLoading(true)
     try {
-      const token = document.cookie.match(/sco_token=([^;]+)/)?.[1]
+      const token = document.cookie.match(/sna_token=([^;]+)/)?.[1]
       const res = await fetch('/api/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },

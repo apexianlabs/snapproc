@@ -1,6 +1,6 @@
 export const metadata = {
   title: 'Snapproc — Turn messy steps into clean SOPs instantly',
-  description: 'Generate professional Standard Operating Procedures from rough notes in 30 seconds.',
+  description: 'Turn messy steps into clean SOPs instantly',
 }
 export default function RootLayout({ children }) {
   return (
