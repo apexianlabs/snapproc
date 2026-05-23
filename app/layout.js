@@ -1,4 +1,5 @@
 export const metadata = {
+  icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
   title: 'Snapproc — Turn messy steps into clean SOPs instantly',
   description: 'Turn messy steps into clean SOPs instantly',
 }
