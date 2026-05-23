@@ -2,16 +2,21 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
-const Logo = ({ size = 32, color = '#0891b2', initial = 'S' }) => (
+const Logo = ({ size = 32 }) => (
   <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stopColor={color} stopOpacity="0.9"/>
-        <stop offset="100%" stopColor={color} stopOpacity="0.6"/>
+      <linearGradient id="sp1" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stopColor="#22d3ee"/>
+        <stop offset="100%" stopColor="#0e7490"/>
       </linearGradient>
     </defs>
-    <rect width="100" height="100" rx="22" fill="url(#lg1)"/>
-    <text x="50" y="68" textAnchor="middle" fontSize="52" fontWeight="900" fontFamily="Arial,sans-serif" fill="white">{initial}</text>
+    <rect x="15" y="30" width="70" height="50" rx="10" fill="url(#sp1)"/>
+    <circle cx="50" cy="55" r="18" fill="#0e7490" opacity="0.8"/>
+    <circle cx="50" cy="55" r="13" fill="#164e63"/>
+    <circle cx="50" cy="55" r="8" fill="#0891b2" opacity="0.9"/>
+    <circle cx="46" cy="51" r="3" fill="white" opacity="0.4"/>
+    <rect x="38" y="20" width="24" height="12" rx="4" fill="url(#sp1)"/>
+    <rect x="68" y="33" width="10" height="7" rx="3" fill="white" opacity="0.5"/>
   </svg>
 )
 
